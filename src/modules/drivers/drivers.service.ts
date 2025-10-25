@@ -46,16 +46,16 @@ export class DriversService {
 
   // Find nearest available drivers within radius
   async findNearestDrivers(pickupLat: number, pickupLng: number, radiusKm: number = 10) {
-    console.log(`🔍 Searching for drivers near ${pickupLat}, ${pickupLng} within ${radiusKm}km`);
+    console.log(`Searching for drivers near ${pickupLat}, ${pickupLng} within ${radiusKm}km`);
     
     const onlineDrivers = await this.findOnlineDrivers();
-    console.log(`📊 Found ${onlineDrivers.length} online drivers in database`);
+    console.log(`Found ${onlineDrivers.length} online drivers in database`);
     
     const driversWithDistance: Array<{
       id: string;
       phone: string;
       name: string | null;
-      vehicle: string | null;
+      vehicleId: string | null;
       status: any;
       password: string;
       createdAt: Date;
@@ -66,24 +66,24 @@ export class DriversService {
     }> = [];
 
     for (const driver of onlineDrivers) {
-      console.log(`👨‍💼 Checking driver ${driver.id} (${driver.name})`);
+      console.log(`Checking driver ${driver.id} (${driver.name})`);
       
       // Get driver's current location from Redis
       const locationData = await this.redis.hget('drivers:locations', driver.id);
-      console.log(`📍 Driver ${driver.id} location data:`, locationData);
+      console.log(`Driver ${driver.id} location data:`, locationData);
       
       if (!locationData) {
-        console.log(`❌ No location data found for driver ${driver.id}`);
+        console.log(`No location data found for driver ${driver.id}`);
         continue;
       }
 
       const { lat, lng } = JSON.parse(locationData);
       const distance = this.calculateDistance(pickupLat, pickupLng, lat, lng);
       
-      console.log(`📏 Driver ${driver.id} distance: ${distance.toFixed(2)}km (limit: ${radiusKm}km)`);
+      console.log(`Driver ${driver.id} distance: ${distance.toFixed(2)}km (limit: ${radiusKm}km)`);
       
       if (distance <= radiusKm) {
-        console.log(`✅ Driver ${driver.id} is within range!`);
+        console.log(`Driver ${driver.id} is within range!`);
         driversWithDistance.push({
           ...driver,
           distance,
@@ -91,11 +91,11 @@ export class DriversService {
           currentLng: lng
         });
       } else {
-        console.log(`❌ Driver ${driver.id} is too far away`);
+        console.log(`Driver ${driver.id} is too far away`);
       }
     }
 
-    console.log(`🎯 Found ${driversWithDistance.length} drivers within range`);
+    console.log(`Found ${driversWithDistance.length} drivers within range`);
     
     // Sort by distance (nearest first)
     return driversWithDistance.sort((a, b) => a.distance - b.distance);
@@ -103,7 +103,7 @@ export class DriversService {
 
   // Update driver location
   async updateLocation(driverId: string, lat: number, lng: number) {
-    console.log(`📍 Updating location for driver ${driverId}: ${lat}, ${lng}`);
+    console.log(`Updating location for driver ${driverId}: ${lat}, ${lng}`);
     
     const locationData = { 
       lat, 
@@ -115,7 +115,7 @@ export class DriversService {
     
     // Verify the location was saved
     const savedLocation = await this.redis.hget('drivers:locations', driverId);
-    console.log(`✅ Location saved for driver ${driverId}:`, savedLocation);
+    console.log(`Location saved for driver ${driverId}:`, savedLocation);
   }
 
   // Get driver location
@@ -223,15 +223,15 @@ export class DriversService {
 
   // Debug method to check Redis data
   async debugRedisData() {
-    console.log('🔍 Debugging Redis data...');
+    console.log('Debugging Redis data...');
     
     // Get all driver locations from Redis
     const allLocations = await this.redis.hgetall('drivers:locations');
-    console.log('📍 All driver locations in Redis:', allLocations);
+    console.log('All driver locations in Redis:', allLocations);
     
     // Get all online drivers from database
     const onlineDrivers = await this.findOnlineDrivers();
-    console.log('👨‍💼 Online drivers in database:', onlineDrivers.map(d => ({ id: d.id, name: d.name, status: d.status })));
+    console.log('Online drivers in database:', onlineDrivers.map(d => ({ id: d.id, name: d.name, status: d.status })));
     
     return {
       redisLocations: allLocations,

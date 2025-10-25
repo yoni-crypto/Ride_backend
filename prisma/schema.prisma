@@ -22,12 +22,61 @@ model Driver {
   id         String   @id @default(uuid())
   phone      String   @unique
   name       String?
-  vehicle    String?
+  email      String?
   status     DriverStatus @default(OFFLINE)
   password   String
+  isVerified Boolean  @default(false)
+  rating     Float    @default(5.0)
+  totalRides Int      @default(0)
+  earnings   Float    @default(0)
+  licenseNumber String?
+  licenseExpiry DateTime?
+  insuranceExpiry DateTime?
+  vehicleId  String? @unique
+  vehicle    Vehicle? @relation(fields: [vehicleId], references: [id])
+  documents DriverDocument[]
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   rides      Ride[]   @relation("driverRides")
+}
+
+model Vehicle {
+  id          String   @id @default(uuid())
+  make        String
+  model        String
+  year         Int
+  color        String
+  plateNumber  String   @unique
+  vin         String   @unique
+  status      VehicleStatus @default(PENDING)
+  documents   VehicleDocument[]
+  driver      Driver?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model DriverDocument {
+  id        String   @id @default(uuid())
+  driverId  String
+  driver    Driver   @relation(fields: [driverId], references: [id])
+  type      DocumentType
+  url       String
+  status   DocumentStatus @default(PENDING)
+  verifiedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model VehicleDocument {
+  id        String   @id @default(uuid())
+  vehicleId String
+  vehicle   Vehicle  @relation(fields: [vehicleId], references: [id])
+  type      DocumentType
+  url       String
+  status   DocumentStatus @default(PENDING)
+  verifiedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Ride {
@@ -64,4 +113,26 @@ enum DriverStatus {
   ONLINE
   OFFLINE
   ON_TRIP
+}
+
+enum VehicleStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  SUSPENDED
+}
+
+enum DocumentType {
+  DRIVER_LICENSE
+  INSURANCE
+  REGISTRATION
+  INSPECTION
+  BACKGROUND_CHECK
+}
+
+enum DocumentStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  EXPIRED
 }

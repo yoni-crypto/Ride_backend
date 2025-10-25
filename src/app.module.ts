@@ -9,6 +9,8 @@ import { SocketModule } from './modules/socket/socket.module';
 import { DriversModule } from './modules/drivers/drivers.module';
 import { AdminModule } from './modules/admin/admin.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
+import { VehiclesModule } from './modules/vehicles/vehicles.module';
+import { AnalyticsModule } from './modules/analytics/analytics.module';
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
     DriversModule,
     AdminModule,
     NotificationsModule,
+    VehiclesModule,
+    AnalyticsModule,
   ],
   providers: [PrismaService],
 })
