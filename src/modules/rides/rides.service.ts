@@ -238,8 +238,8 @@ export class RidesService {
   // Get active rides for a user
   async getActiveRides(userId: string, role: 'PASSENGER' | 'DRIVER') {
     const where = role === 'PASSENGER' 
-      ? { passengerId: userId, status: { in: ['REQUESTED', 'ASSIGNED', 'STARTED'] } }
-      : { driverId: userId, status: { in: ['ASSIGNED', 'STARTED'] } };
+      ? { passengerId: userId, status: { in: ['REQUESTED', 'ASSIGNED', 'STARTED'] as any[] } }
+      : { driverId: userId, status: { in: ['ASSIGNED', 'STARTED'] as any[] } };
 
     return this.prisma.ride.findMany({
       where,
