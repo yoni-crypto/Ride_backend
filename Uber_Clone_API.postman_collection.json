@@ -1,0 +1,680 @@
+{
+  "info": {
+    "name": "Uber Clone API",
+    "description": "Complete API testing collection for Uber Clone Backend",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000/api",
+      "type": "string"
+    },
+    {
+      "key": "passengerToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "driverToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "rideId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "driverId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Authentication",
+      "item": [
+        {
+          "name": "Register Passenger",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"+1234567890\",\n  \"name\": \"John Passenger\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register Driver",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"+1234567891\",\n  \"name\": \"Jane Driver\",\n  \"password\": \"password123\",\n  \"role\": \"DRIVER\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login Passenger",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.data && response.data.token) {",
+                  "        pm.collectionVariables.set('passengerToken', response.data.token);",
+                  "        console.log('Passenger token saved:', response.data.token);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"+1234567890\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login Driver",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.data && response.data.token) {",
+                  "        pm.collectionVariables.set('driverToken', response.data.token);",
+                  "        console.log('Driver token saved:', response.data.token);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"+1234567891\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register Admin",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"+1234567892\",\n  \"name\": \"Admin User\",\n  \"password\": \"password123\",\n  \"role\": \"ADMIN\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.data && response.data.token) {",
+                  "        pm.collectionVariables.set('adminToken', response.data.token);",
+                  "        console.log('Admin token saved:', response.data.token);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"+1234567892\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2. Driver Management",
+      "item": [
+        {
+          "name": "Update Driver Status",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{driverToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"ONLINE\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/drivers/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["drivers", "status"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Driver Location",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{driverToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"lat\": 40.7128,\n  \"lng\": -74.0060\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/drivers/location",
+              "host": ["{{baseUrl}}"],
+              "path": ["drivers", "location"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Find Nearby Drivers",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/drivers/nearby?lat=40.7128&lng=-74.0060&radius=5",
+              "host": ["{{baseUrl}}"],
+              "path": ["drivers", "nearby"],
+              "query": [
+                {
+                  "key": "lat",
+                  "value": "40.7128"
+                },
+                {
+                  "key": "lng",
+                  "value": "-74.0060"
+                },
+                {
+                  "key": "radius",
+                  "value": "5"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Driver Statistics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{driverToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/drivers/stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["drivers", "stats"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Estimate Ride",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/drivers/estimate?pickupLat=40.7128&pickupLng=-74.0060&dropoffLat=40.7589&dropoffLng=-73.9851",
+              "host": ["{{baseUrl}}"],
+              "path": ["drivers", "estimate"],
+              "query": [
+                {
+                  "key": "pickupLat",
+                  "value": "40.7128"
+                },
+                {
+                  "key": "pickupLng",
+                  "value": "-74.0060"
+                },
+                {
+                  "key": "dropoffLat",
+                  "value": "40.7589"
+                },
+                {
+                  "key": "dropoffLng",
+                  "value": "-73.9851"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "3. Ride Management",
+      "item": [
+        {
+          "name": "Create Ride Request",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.id) {",
+                  "        pm.collectionVariables.set('rideId', response.id);",
+                  "        console.log('Ride ID saved:', response.id);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pickupLat\": 40.7128,\n  \"pickupLng\": -74.0060,\n  \"dropoffLat\": 40.7589,\n  \"dropoffLng\": -73.9851\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/rides",
+              "host": ["{{baseUrl}}"],
+              "path": ["rides"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Ride History",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/rides/history?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["rides", "history"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Active Rides",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/rides/active",
+              "host": ["{{baseUrl}}"],
+              "path": ["rides", "active"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Specific Ride",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/rides/{{rideId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["rides", "{{rideId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Accept Ride (Driver)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{driverToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/rides/{{rideId}}/accept",
+              "host": ["{{baseUrl}}"],
+              "path": ["rides", "{{rideId}}", "accept"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Start Ride",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{driverToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/rides/{{rideId}}/start",
+              "host": ["{{baseUrl}}"],
+              "path": ["rides", "{{rideId}}", "start"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Complete Ride",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{driverToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"actualDistance\": 2.5,\n  \"actualTimeMinutes\": 8\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/rides/{{rideId}}/complete",
+              "host": ["{{baseUrl}}"],
+              "path": ["rides", "{{rideId}}", "complete"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cancel Ride",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/rides/{{rideId}}/cancel",
+              "host": ["{{baseUrl}}"],
+              "path": ["rides", "{{rideId}}", "cancel"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "4. Admin Dashboard",
+      "item": [
+        {
+          "name": "Get Dashboard Statistics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/dashboard",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "dashboard"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Recent Rides",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/recent-rides?limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "recent-rides"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Statistics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "users"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Analytics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/analytics?days=30",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "analytics"],
+              "query": [
+                {
+                  "key": "days",
+                  "value": "30"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Online Drivers",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/drivers/online",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "drivers", "online"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "System Health Check",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "health"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

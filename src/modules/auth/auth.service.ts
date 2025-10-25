@@ -41,8 +41,10 @@ export class AuthService {
       };
     }
 
+    // Create user with specified role (PASSENGER or ADMIN)
+    const userRole = role === 'ADMIN' ? 'ADMIN' : 'PASSENGER';
     const user = await this.prisma.user.create({
-      data: { phone, name, password: hashed },
+      data: { phone, name, password: hashed, role: userRole },
     });
     const { password: _, ...userSafe } = user;
 
@@ -65,7 +67,7 @@ export class AuthService {
     const valid = await bcrypt.compare(password, account.password);
     if (!valid) throw new UnauthorizedException('Invalid credentials');
 
-    const role = user ? 'PASSENGER' : 'DRIVER';
+    const role = user ? user.role : 'DRIVER';
     const payload = { sub: account.id, phone: account.phone, role };
 
     const token = this.jwtService.sign(payload);
